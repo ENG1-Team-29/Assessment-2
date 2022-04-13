@@ -23,7 +23,9 @@ public abstract class College extends PhysicsObject implements IHealth {
 
 	public Sprite deadSprite;
 	public Sprite islandSprite;
+	public String islandTextureFile;
 	public Sprite aliveSprite;
+	public String aliveTextureFile;
 
 	/**
 	 * Used to access player boat and to notify the game controller when the college
@@ -36,9 +38,11 @@ public abstract class College extends PhysicsObject implements IHealth {
 		position = pos;
 
 		setSprite(aliveTexture, position, new Vector2(100, 100));
+		this.aliveTextureFile = aliveTexture;
 		aliveSprite = this.sprite;
 		islandSprite = initSprite(islandTexture,
 				new Vector2(sprite.getX() - 10, sprite.getY() - 10), new Vector2(120, 120));
+		this.islandTextureFile = islandTexture;
 
 		collisionPolygon = new Polygon(new float[] { 0, 0, 100, 0, 100, 100, 0, 100 });
 		collisionPolygon.setPosition(position.x, position.y);

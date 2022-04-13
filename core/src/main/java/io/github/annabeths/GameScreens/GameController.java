@@ -15,7 +15,6 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.FileTextureData;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.MathUtils;
@@ -315,14 +314,7 @@ public class GameController implements Screen {
 			bossCollege.becomeVulnerable();
 		}
 
-		String alivePath = ((FileTextureData) oldCollege.aliveSprite.getTexture().getTextureData())
-				.getFileHandle().path();
-		// String deadPath =
-		// ((FileTextureData)oldCollege.deadSprite.getTexture().getTextureData()).getFileHandle().path();
-		String islandPath = ((FileTextureData) oldCollege.islandSprite.getTexture()
-				.getTextureData()).getFileHandle().path();
-		PlayerCollege newFriendlyCollege = new PlayerCollege(oldCollege.position, alivePath,
-				islandPath, this, true);
+		PlayerCollege newFriendlyCollege = new PlayerCollege(oldCollege);
 		physicsObjects.add(newFriendlyCollege);
 	}
 

@@ -27,18 +27,28 @@ public class PlayerCollege extends College {
 	public float splashTextTime = 3;
 	public GlyphLayout splashText;
 
+	/**
+	 * Creates a PlayerCollege based on an EnemyCollege. Used for when an enemy
+	 * college is captured and converted into a player college.
+	 * 
+	 * @param oldCol the enemy college to use as a base
+	 */
+	public PlayerCollege(EnemyCollege oldCol) {
+		this(oldCol.position, oldCol.aliveTextureFile, oldCol.islandTextureFile, oldCol.gc, true);
+	}
+
 	public PlayerCollege(Vector2 position, String aliveTexture, String islandTexture,
 			GameController gc, boolean showSplashText) {
 		super(position, aliveTexture, islandTexture, gc);
 		healAmount = 15;
 		range = 400;
 		if (showSplashText) {
-			splashText = new GlyphLayout();
-			splashText.setText(font, "College Captured!");
+			splashText = new GlyphLayout(font, "College Captured!");
 		}
 	}
 
 	public void updateSplashText(String text) {
+		if (splashText == null) return;
 		splashText.setText(font, text);
 	}
 
@@ -70,6 +80,12 @@ public class PlayerCollege extends College {
 		}
 	}
 
+	/**
+	 * Checks if a friendly boat should spawn. If it should spawn a friendly boat, a
+	 * new {@link FriendlyBoat} object will be created in the GameController.
+	 * 
+	 * @param delta the time elapsed since the last update
+	 */
 	public void checkForSpawnFriendlyBoat(float delta) {
 		timeSinceLastSpawn = timeSinceLastSpawn + delta;
 		if (timeSinceLastSpawn > boatSpawnTime) {

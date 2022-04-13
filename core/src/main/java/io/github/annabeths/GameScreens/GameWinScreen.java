@@ -19,13 +19,12 @@ public class GameWinScreen implements Screen {
 
 	public GameWinScreen(eng1game g) {
 		game = g;
-		winTextLayout = new GlyphLayout();
-		winTextLayout.setText(font, "YOU WIN! Press ENTER to return to the menu");
-		batch = new SpriteBatch();
+		winTextLayout = new GlyphLayout(font, "YOU WIN! Press ENTER to return to the menu");
 	}
 
 	@Override
 	public void show() {
+		batch = new SpriteBatch();
 	}
 
 	@Override

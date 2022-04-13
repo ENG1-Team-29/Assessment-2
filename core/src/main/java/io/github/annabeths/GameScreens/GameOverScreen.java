@@ -21,20 +21,21 @@ public class GameOverScreen implements Screen {
 	public GameOverScreen(eng1game g, String text) {
 		game = g;
 		this.text = text;
+
+		gameOverTextLayout = new GlyphLayout(font, text);
 	}
 
 	@Override
 	public void show() {
 		batch = new SpriteBatch();
-		gameOverTextLayout = new GlyphLayout();
-		gameOverTextLayout.setText(font, text);
 	}
 
 	@Override
 	public void render(float delta) {
 		if (Gdx.input.isKeyJustPressed(Keys.R)) {
 			game.gotoScreen(Screens.gameScreen);
-		} else if (Gdx.input.isKeyJustPressed(Keys.ENTER)) {
+		}
+		if (Gdx.input.isKeyJustPressed(Keys.ENTER)) {
 			game.gotoScreen(Screens.menuScreen);
 		}
 

@@ -13,6 +13,7 @@ import com.badlogic.gdx.utils.Timer.Task;
 import io.github.annabeths.GeneralControl.eng1game;
 
 public class Splash implements Screen {
+
 	private SpriteBatch batch;
 	private Sprite splash;
 	private Sound splashSound1 = Gdx.audio.newSound(Gdx.files.internal("audio/splash/ding.mp3"));
@@ -68,10 +69,9 @@ public class Splash implements Screen {
 		splash.draw(batch);
 
 		if (fading && splash.getColor().a > 0)
-			splash.setAlpha(splash.getColor().a - (Gdx.graphics.getDeltaTime() / 2));
+			splash.setAlpha(splash.getColor().a - (delta / 2));
 		else if (splash.getColor().a <= 0) {
 			game.gotoScreen(Screens.menuScreen);
-			;
 		}
 
 		batch.end();

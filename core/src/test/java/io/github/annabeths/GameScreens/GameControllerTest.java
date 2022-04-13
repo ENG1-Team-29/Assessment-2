@@ -1,10 +1,10 @@
 package io.github.annabeths.GameScreens;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyFloat;
 import static org.mockito.Mockito.CALLS_REAL_METHODS;
@@ -12,8 +12,10 @@ import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockingDetails;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.withSettings;
 
 import org.junit.jupiter.api.BeforeAll;
@@ -24,7 +26,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
@@ -35,9 +36,10 @@ import io.github.annabeths.Boats.NeutralBoat;
 import io.github.annabeths.Boats.PlayerBoat;
 import io.github.annabeths.Collectables.Powerup;
 import io.github.annabeths.Collectables.PowerupType;
+import io.github.annabeths.Colleges.EnemyCollege;
 import io.github.annabeths.GameGenerics.PhysicsObject;
 import io.github.annabeths.GeneralControl.DebugUtils;
-import io.github.annabeths.GeneralControl.ResourceManager;
+import io.github.annabeths.GeneralControl.TestHelper;
 import io.github.annabeths.GeneralControl.eng1game;
 import io.github.annabeths.Level.GameMap;
 import io.github.annabeths.Projectiles.ProjectileData;
@@ -55,8 +57,7 @@ public class GameControllerTest {
 	public static void init() {
 		Gdx.gl = mock(GL20.class);
 		Gdx.graphics = mock(Graphics.class);
-		ResourceManager.font = mock(BitmapFont.class);
-		ResourceManager.debugFont = mock(BitmapFont.class);
+		TestHelper.initFonts();
 	}
 
 	@BeforeEach
@@ -250,6 +251,43 @@ public class GameControllerTest {
 
 		gc.UpdateObjects(1);
 		verify(nb, times(1)).OnCollision(any(PlayerBoat.class));
+	}
+
+	@Test
+	public void testAddXP() {
+		gc.AddXP(10);
+		assertEquals(10, gc.plunder);
+		assertEquals(10, gc.xp);
+	}
+
+	@Test
+	public void testCollegeDestroyed() {
+		gc.bossCollege = mock(EnemyCollege.class);
+		EnemyCollege col = mock(EnemyCollege.class, withSettings().useConstructor(new Vector2(0, 0),
+				"", "", gc, ProjectileData.BOSS, 100));
+		gc.CollegeDestroyed(col);
+		verify(gc.bossCollege, never()).becomeVulnerable();
+
+		// kill all colleges
+		gc.physicsObjects.stream()
+				.filter(p -> p instanceof EnemyCollege && !p.equals(gc.bossCollege)).forEach(p -> {
+					EnemyCollege ep = (EnemyCollege) p;
+					ep.damage(ep.getHealth());
+				});
+
+		// test that the boss college becomes vulnerable
+		gc.CollegeDestroyed(col);
+		verify(gc.bossCollege, times(1)).becomeVulnerable();
+	}
+
+	@Test
+	public void testClearKilledObjects() {
+		ProjectileRay ray = mock(ProjectileRay.class);
+		when(ray.removeOnNextTick()).thenReturn(true);
+		gc.rays.add(ray);
+		gc.rays.add(mock(ProjectileRay.class));
+		gc.ClearKilledObjects();
+		assertEquals(1, gc.rays.size());
 	}
 
 }

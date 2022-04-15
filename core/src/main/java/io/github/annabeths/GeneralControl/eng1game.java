@@ -21,9 +21,23 @@ public class eng1game extends Game {
 
 	public boolean timeUp = false;
 
+	/**
+	 * This debug value is controlled by arguments passed to the game. This value
+	 * must NOT be changed manually from FALSE.
+	 */
+	private boolean debug = false;
+
+	public eng1game(boolean debug) {
+		this.debug = debug;
+	}
+
+	public eng1game() {
+	}
+
 	@Override
 	public void create() {
 		ResourceManager.init(new AssetManager());
+		if (!debug) DebugUtils.initDebugSettings();
 		// create a menu and game screen, then switch to a new splash screen
 		menuScreen = new Menu(this);
 		gameScreen = new GameController(this);

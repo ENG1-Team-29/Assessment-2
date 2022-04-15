@@ -1,7 +1,9 @@
 package io.github.annabeths.GeneralControl;
 
 import static io.github.annabeths.GeneralControl.ResourceManager.debugFont;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyFloat;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -9,6 +11,7 @@ import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -18,6 +21,7 @@ import org.junit.jupiter.api.Test;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Graphics;
+import com.badlogic.gdx.backends.headless.HeadlessFiles;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
@@ -73,8 +77,7 @@ public class DebugUtilsTest {
 	public void testDrawDebugText() {
 		debugFont = mock(BitmapFont.class);
 		DebugUtils.drawDebugText(gc, mock(SpriteBatch.class));
-		verify(debugFont, atLeast(1)).draw(any(SpriteBatch.class), anyString(), anyFloat(),
-				anyFloat());
+		verify(debugFont, atLeast(1)).draw(any(), anyString(), anyFloat(), anyFloat());
 	}
 
 	@Test
@@ -84,6 +87,21 @@ public class DebugUtilsTest {
 		DebugUtils.drawEntityDebugText(gc, mock(SpriteBatch.class));
 		verify(debugFont, atLeast(1)).draw(any(SpriteBatch.class), anyString(), anyFloat(),
 				anyFloat());
+	}
+
+	@Test
+	public void testDebugDisabled() throws NoSuchFieldException, SecurityException,
+			IllegalArgumentException, IllegalAccessException {
+		Gdx.files = new HeadlessFiles();
+		DebugUtils.initDebugSettings();
+		assertFalse(DebugUtils.DRAW_DEBUG_COLLISIONS);
+		assertFalse(DebugUtils.DRAW_DEBUG_TEXT);
+		assertTrue(DebugUtils.ENEMY_COLLEGE_FIRE);
+
+		// ensure the debug field in eng1game is false by default
+		Field f = eng1game.class.getDeclaredField("debug");
+		f.setAccessible(true);
+		assertFalse(f.getBoolean(new eng1game()));
 	}
 
 }

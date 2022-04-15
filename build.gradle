@@ -71,7 +71,7 @@ project(":core") {
 		
 		testImplementation("org.mockito:mockito-core:$mockitoVersion")
 		
-		testRuntime("com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion")
+		testImplementation("com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion")
 		testRuntime("com.badlogicgames.gdx:gdx:$gdxVersion")
 		testRuntime("com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop")
         

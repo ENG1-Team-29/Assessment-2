@@ -3,15 +3,14 @@ package io.github.annabeths.GameScreens;
 import static io.github.annabeths.GeneralControl.Difficulty.EASY;
 import static io.github.annabeths.GeneralControl.Difficulty.HARD;
 import static io.github.annabeths.GeneralControl.Difficulty.MEDIUM;
+import static io.github.annabeths.GeneralControl.ResourceManager.font;
+import static io.github.annabeths.GeneralControl.ResourceManager.getTexture;
 
 import java.util.function.Consumer;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -29,40 +28,28 @@ import io.github.annabeths.GeneralControl.eng1game;
  * The menu where the game difficulty is selected
  * 
  * @author James Burnell
- * @author Jiahao Shang
  */
 public class GameDifScreen implements Screen {
 
 	private Stage stage;
 
-	private SpriteBatch batch;
 	private eng1game game;
 
 	/** Array of the menu buttons */
 	private TextButton[] buttons = new TextButton[4];
 
-	private BitmapFont font;
-
 	public GameDifScreen(eng1game g) {
-		batch = new SpriteBatch();
 		game = g;
-
-		stage = new Stage();
-		Gdx.input.setInputProcessor(stage);
-
-		font = new BitmapFont(Gdx.files.internal("fonts/bobcat.fnt"), false);
-
-		setupButtons();
 	}
 
 	private void setupButtons() {
 		// Size of each button
 		Vector2 btnSize = new Vector2(150, 350);
 		// Array of colors the text should be
-		Color[] textColors = {Color.GREEN, Color.ORANGE, Color.RED, Color.BLACK};
+		Color[] textColors = { Color.GREEN, Color.ORANGE, Color.RED, Color.BLACK };
 		// Array of text to display on the buttons
-		String[] buttonText = {"EASY", "MEDIUM", "HARD", "RETURN\nTO MENU"};
-		Difficulty[] buttonDiff = {EASY, MEDIUM, HARD};
+		String[] buttonText = { "EASY", "MEDIUM", "HARD", "RETURN\nTO MENU" };
+		Difficulty[] buttonDiff = { EASY, MEDIUM, HARD };
 
 		// y position of the buttons
 		float btnY = (Gdx.graphics.getHeight() - btnSize.y) / 2;
@@ -79,7 +66,7 @@ public class GameDifScreen implements Screen {
 			TextButtonStyle style = new TextButtonStyle();
 			style.font = font;
 			style.fontColor = textColors[i];
-			style.up = new TextureRegionDrawable(new Texture("ui/upgradebutton.png"));
+			style.up = new TextureRegionDrawable(getTexture("ui/upgradebutton.png"));
 
 			// Define the button
 			buttons[i] = new TextButton(buttonText[i], style);
@@ -105,13 +92,11 @@ public class GameDifScreen implements Screen {
 	}
 
 	/**
-	 * Created a new click listener based on the action given and assigns it as
-	 * a new listener to the actor. Used to make code cleaner elsewhere.
+	 * Created a new click listener based on the action given and assigns it as a
+	 * new listener to the actor. Used to make code cleaner elsewhere.
 	 * 
-	 * @param act
-	 *            the actor to apply the listener to
-	 * @param actions
-	 *            the actions to run upon clicking the actor
+	 * @param act the actor to apply the listener to
+	 * @param actions the actions to run upon clicking the actor
 	 * @author James Burnell
 	 */
 	private void clickListener(Actor act, Consumer<InputEvent> actions) {
@@ -125,43 +110,38 @@ public class GameDifScreen implements Screen {
 
 	@Override
 	public void show() {
+		stage = new Stage();
+		Gdx.input.setInputProcessor(stage);
 
+		setupButtons();
 	}
 
 	@Override
 	public void render(float delta) {
 		ScreenUtils.clear(Color.DARK_GRAY);
-
-		batch.begin();
+		stage.act();
 		stage.draw();
-		batch.end();
 	}
 
 	@Override
 	public void resize(int width, int height) {
-
 	}
 
 	@Override
 	public void pause() {
-
 	}
 
 	@Override
 	public void resume() {
-
 	}
 
 	@Override
 	public void hide() {
-
 	}
 
 	@Override
 	public void dispose() {
 		stage.dispose();
-		batch.dispose();
-		font.dispose();
 	}
 
 }

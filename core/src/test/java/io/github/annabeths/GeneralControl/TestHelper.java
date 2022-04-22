@@ -27,6 +27,8 @@ public class TestHelper {
 		Gdx.audio = mock(Audio.class, withSettings().defaultAnswer(RETURNS_MOCKS));
 		Gdx.input = mock(Input.class);
 
+		ResourceManager.nullTex = ResourceManager.genNullTex();
+
 		initFonts();
 	}
 

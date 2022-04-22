@@ -1,5 +1,7 @@
 package io.github.annabeths.Obstacles;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
 
@@ -38,7 +40,7 @@ public class Kraken extends ObstacleEntity implements IHealth {
 
 	public Kraken(GameController controller, Vector2 position) {
 		super(controller, position, "img/entity/kraken1.png", new Vector2(200, 200));
-		Polygon poly = new Polygon(new float[]{0, 75, 75, 150, 150, 75, 75, 0});
+		Polygon poly = new Polygon(new float[] { 0, 75, 75, 150, 150, 75, 75, 0 });
 		poly.setPosition(position.x - getLocalCenterX(), position.y);
 		poly.setOrigin(0, 0);
 		poly.setRotation(rotation - 90);
@@ -61,8 +63,8 @@ public class Kraken extends ObstacleEntity implements IHealth {
 
 	@Override
 	public void damage(float dmg) {
-		health = health - dmg;
-		if (health <= 0) {
+		health = MathUtils.clamp(health - dmg, 0, getMaxHealth());
+		if (isDead()) {
 			kill();
 			controller.addPlunder(plunderValue);
 			controller.addXp(xpValue);
@@ -72,7 +74,7 @@ public class Kraken extends ObstacleEntity implements IHealth {
 	@Override
 	public void OnCollision(PhysicsObject other) {
 		if (other instanceof Boat) {
-			((Boat) other).damage(5);
+			((Boat) other).damage(5 * Gdx.graphics.getDeltaTime());
 		} else if (other instanceof Projectile && ((Projectile) other).isPlayerProjectile()) {
 			other.kill();
 			damage(((Projectile) other).getDamage());
@@ -80,29 +82,28 @@ public class Kraken extends ObstacleEntity implements IHealth {
 	}
 
 	public void Move(float delta) {
-		timeOnCurrentDirection = timeOnCurrentDirection + delta;
+		timeOnCurrentDirection += delta;
 		if (timeOnCurrentDirection >= timeBetweenDirectionChanges) {
 			timeOnCurrentDirection = 0;
-			direction = new Vector2(Math.random() < 0.5 ? -1 : 1, Math.random() < 0.5 ? -1 : 1);
+			direction = new Vector2(MathUtils.randomSign(), MathUtils.randomSign());
 			frameCounter = Math.max(1, (frameCounter + 1) % 4);
 
 			String newFrame = null;
 			switch (frameCounter) {
-				case 1 :
-					newFrame = frame1;
-					break;
-				case 2 :
-					newFrame = frame2;
-					break;
-				case 3 :
-					newFrame = frame3;
+			case 1:
+				newFrame = frame1;
+				break;
+			case 2:
+				newFrame = frame2;
+				break;
+			case 3:
+				newFrame = frame3;
 
 			}
 			setSprite(newFrame, position, new Vector2(200, 200));
 		}
 
-		position = new Vector2(position.x + (direction.x * delta * speed),
-				position.y + (direction.y * delta * speed));
+		position.add(direction.cpy().scl(delta * speed));
 
 		sprite.setPosition(position.x - 95, position.y - 145);
 		collisionPolygon.setPosition(position.x - getLocalCenterX(), position.y);
@@ -112,12 +113,11 @@ public class Kraken extends ObstacleEntity implements IHealth {
 	@Override
 	public void Update(float delta) {
 		Move(delta);
-		timeSinceLastShot = timeSinceLastShot + delta;
+		timeSinceLastShot += delta;
 		if (timeSinceLastShot >= timeBetweenShots) {
 			timeSinceLastShot = 0;
 			Shoot();
 		}
-
 	}
 
 	public void ShotgunShot() {
@@ -132,22 +132,16 @@ public class Kraken extends ObstacleEntity implements IHealth {
 					new Vector2(origin.x + i, origin.y + i));
 
 			// Add the projectile to the GameController's physics objects list
-			// so it
-			// receives updates
+			// so it receives updates
 			controller.NewPhysicsObject(proj);
 		}
 	}
 
 	public void Shoot() {
-		float dst = position.dst(controller.playerBoat.position);
+		float dst = getCenter().dst(controller.playerBoat.getCenter());
 		if (dst <= attackRange) {
 			ShotgunShot();
 		}
-
 	}
 
-	@Override
-	public void Destroy() {
-
-	}
 }

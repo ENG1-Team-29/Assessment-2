@@ -3,6 +3,7 @@ package io.github.annabeths.UI;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -42,6 +43,7 @@ import io.github.annabeths.GeneralControl.ResourceManager;
 import io.github.annabeths.GeneralControl.TestHelper;
 import io.github.annabeths.GeneralControl.eng1game;
 import io.github.annabeths.Level.GameMap;
+import io.github.annabeths.Projectiles.ProjectileData;
 
 public class HUDTest {
 
@@ -324,6 +326,36 @@ public class HUDTest {
 	}
 
 	@Test
+	public void testPressUpgrade1Plunder() {
+		try {
+			hud.setupStyles();
+			hud.setupShopMenu();
+			gc.setPlunder(100000);
+		} catch (Exception e) {
+		}
+		hud.usePlunderShop = true;
+		ClickListener cl1 = (ClickListener) hud.upgradeButton1.getListeners().get(1);
+		assertDoesNotThrow(() -> cl1.touchDown(null, 0, 0, 0, 0));
+		assertEquals(ProjectileData.RAY, gc.playerBoat.activeProjectileType);
+		verify(hud, times(2)).updateShopMenu(); // one for setup, one for call
+	}
+
+	@Test
+	public void testPressUpgrade1NoPlunder() {
+		try {
+			hud.setupStyles();
+			hud.setupShopMenu();
+			gc.setPlunder(0);
+		} catch (Exception e) {
+		}
+		hud.usePlunderShop = true;
+		ClickListener cl1 = (ClickListener) hud.upgradeButton1.getListeners().get(1);
+		assertDoesNotThrow(() -> cl1.touchDown(null, 0, 0, 0, 0));
+		assertNotEquals(ProjectileData.RAY, gc.playerBoat.activeProjectileType);
+		verify(hud, times(1)).updateShopMenu(); // one for setup, none for call
+	}
+
+	@Test
 	public void testPressUpgrade2() {
 		try {
 			hud.setupStyles();
@@ -331,6 +363,21 @@ public class HUDTest {
 			gc.setXp(100000);
 		} catch (Exception e) {
 		}
+		ClickListener cl2 = (ClickListener) hud.upgradeButton2.getListeners().get(1);
+		assertDoesNotThrow(() -> cl2.touchDown(null, 0, 0, 0, 0));
+		verify(hud, times(1)).BuyUpgrade(eq(2));
+		verify(hud, times(2)).RandomiseUpgrades(); // one for setup, one for call
+	}
+
+	@Test
+	public void testPressUpgrade2Plunder() {
+		try {
+			hud.setupStyles();
+			hud.setupShopMenu();
+			gc.setPlunder(100000);
+		} catch (Exception e) {
+		}
+		hud.usePlunderShop = true;
 		ClickListener cl2 = (ClickListener) hud.upgradeButton2.getListeners().get(1);
 		assertDoesNotThrow(() -> cl2.touchDown(null, 0, 0, 0, 0));
 		verify(hud, times(1)).BuyUpgrade(eq(2));
@@ -396,6 +443,8 @@ public class HUDTest {
 		boolean flag = hud.upgradeMenuOpen;
 		cl.clicked(null, 0, 0);
 		assertFalse(hud.upgradeMenuOpen == flag);
+		cl.clicked(null, 0, 0);
+		assertTrue(hud.upgradeMenuOpen == flag);
 	}
 
 //	@Test

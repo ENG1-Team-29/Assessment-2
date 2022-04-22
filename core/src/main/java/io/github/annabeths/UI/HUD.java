@@ -497,6 +497,7 @@ public class HUD extends GameObject {
 	 * @param upgrade the type of upgrade to buy
 	 * @param amount how much the upgrade will increase
 	 * @param cost how much the upgrade will cost
+	 * @param currency what the user will pay in
 	 * @return The upgrade purchase information
 	 */
 	public static String getUpgradeText(Upgrades upgrade, float amount, int cost, String currency) {

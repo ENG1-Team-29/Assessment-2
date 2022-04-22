@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyFloat;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.CALLS_REAL_METHODS;
 import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
 import static org.mockito.Mockito.doCallRealMethod;
@@ -19,8 +20,12 @@ import java.lang.reflect.Field;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.video.VideoPlayer;
 
 import io.github.annabeths.GeneralControl.TestHelper;
 import io.github.annabeths.GeneralControl.eng1game;
@@ -31,6 +36,7 @@ public class SplashTest {
 	Splash s;
 	Sprite sprite;
 	SpriteBatch batch;
+	VideoPlayer vp;
 
 	@BeforeEach
 	public void setup() throws NoSuchFieldException, SecurityException, IllegalArgumentException,
@@ -61,6 +67,10 @@ public class SplashTest {
 		f3.setAccessible(true);
 		f3.set(s, true);
 
+		vp = mock(VideoPlayer.class);
+		Field f4 = Splash.class.getDeclaredField("vPlayer");
+		f4.setAccessible(true);
+		f4.set(s, vp);
 	}
 
 	@Test
@@ -69,6 +79,28 @@ public class SplashTest {
 		assertDoesNotThrow(() -> s.render(1f));
 
 		verify(sprite, times(1)).draw(any());
+	}
+
+	@Test
+	public void testRenderSkip() {
+		s.showShard = false;
+		s.canSkip = true;
+		when(Gdx.input.isKeyJustPressed(Keys.SPACE)).thenReturn(true);
+		assertDoesNotThrow(() -> s.render(1f));
+
+		verify(game, times(1)).gotoScreen(eq(Screens.menuScreen));
+	}
+
+	@Test
+	public void testRenderShard() {
+		s.showShard = true;
+		when(vp.getTexture()).thenReturn(mock(Texture.class));
+		assertDoesNotThrow(() -> s.render(1f));
+
+		verify(vp, times(1)).update();
+		verify(vp, times(1)).getTexture();
+		verify(batch, times(1)).draw(any(Texture.class), anyFloat(), anyFloat(), anyFloat(),
+				anyFloat());
 	}
 
 	@Test

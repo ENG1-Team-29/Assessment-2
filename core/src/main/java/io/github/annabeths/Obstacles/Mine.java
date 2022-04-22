@@ -32,8 +32,4 @@ public class Mine extends ObstacleEntity {
 
 	}
 
-	@Override
-	public void Destroy() {
-
-	}
 }

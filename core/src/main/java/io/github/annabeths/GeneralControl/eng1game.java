@@ -23,8 +23,7 @@ public class eng1game extends Game {
 	GameController gameScreen;
 
 	/**
-	 * A placeholder for the difficulty so the gamecontroller can be
-	 * instantiated
+	 * A placeholder for the difficulty so the gamecontroller can be instantiated
 	 */
 	private Difficulty diff = Difficulty.MEDIUM;
 
@@ -34,8 +33,8 @@ public class eng1game extends Game {
 	public int gameScore = 0;
 
 	/**
-	 * This debug value is controlled by arguments passed to the game. This
-	 * value must NOT be changed manually from FALSE.
+	 * This debug value is controlled by arguments passed to the game. This value
+	 * must NOT be changed manually from FALSE.
 	 */
 	private boolean debug = false;
 
@@ -49,8 +48,7 @@ public class eng1game extends Game {
 	@Override
 	public void create() {
 		ResourceManager.init(new AssetManager());
-		if (!debug)
-			DebugUtils.initDebugSettings();
+		if (!debug) DebugUtils.initDebugSettings();
 		// create a menu and game screen, then switch to a new splash screen
 		menuScreen = new Menu(this);
 		gameScreen = new GameController(this, diff);
@@ -62,8 +60,7 @@ public class eng1game extends Game {
 	}
 
 	/**
-	 * Disposes of an old game screen so that we don't have multiple running at
-	 * once
+	 * Disposes of an old game screen so that we don't have multiple running at once
 	 */
 	public void removeGameScreen() {
 		gameScreen.dispose();
@@ -73,36 +70,34 @@ public class eng1game extends Game {
 	/**
 	 * Uses the {@link Screens} enumeration to change between any screen.
 	 * 
-	 * @param s
-	 *            the screen to switch to
+	 * @param s the screen to switch to
 	 */
 	public void gotoScreen(Screens s) {
 		switch (s) {
-		case splashScreen : // creates a new splash screen
+		case splashScreen: // creates a new splash screen
 			Splash splashScreen = new Splash(this);
 			setScreen(splashScreen);
 			break;
-		case menuScreen : // switch back to the menu screen
+		case menuScreen: // switch back to the menu screen
 			setScreen(menuScreen);
 			break;
-		case gameScreen : // switch back to the game screen
+		case gameScreen: // switch back to the game screen
 			gameScreen = new GameController(this, diff);
 			setScreen(gameScreen);
 			break;
-		case gameOverScreen :
+		case gameOverScreen:
 			removeGameScreen();
 			GameOverScreen gameOverScreen = new GameOverScreen(this,
-					timeUp
-							? "Time Up! ENTER to go to menu, R to restart"
+					timeUp ? "Time Up! ENTER to go to menu, R to restart"
 							: "You Died! ENTER to go to menu, R to restart");
 			setScreen(gameOverScreen);
 			break;
-		case gameWinScreen :
+		case gameWinScreen:
 			removeGameScreen();
 			GameWinScreen gameWinScreen = new GameWinScreen(this);
 			setScreen(gameWinScreen);
 			break;
-		case gameDifScreen :
+		case gameDifScreen:
 			GameDifScreen gameDifScreen = new GameDifScreen(this);
 			setScreen(gameDifScreen);
 			break;
@@ -116,9 +111,9 @@ public class eng1game extends Game {
 	}
 
 	public void setDifficulty(Difficulty difficulty) {
-		System.out.printf("Set game difficulty to %s\n", difficulty.toString());
-		if (gameScreen != null)
-			gameScreen.setDifficulty(difficulty);
+		Gdx.app.log("eng1game",
+				String.format("Set game difficulty to %s\n", difficulty.toString()));
+		if (gameScreen != null) gameScreen.setDifficulty(difficulty);
 		this.diff = difficulty;
 	}
 }

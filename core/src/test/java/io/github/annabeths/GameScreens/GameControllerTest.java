@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
@@ -19,6 +20,8 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.withSettings;
+
+import java.util.HashSet;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -43,6 +46,7 @@ import io.github.annabeths.GeneralControl.DebugUtils;
 import io.github.annabeths.GeneralControl.TestHelper;
 import io.github.annabeths.GeneralControl.eng1game;
 import io.github.annabeths.Level.GameMap;
+import io.github.annabeths.Obstacles.Weather;
 import io.github.annabeths.Projectiles.ProjectileData;
 import io.github.annabeths.Projectiles.ProjectileRay;
 import io.github.annabeths.UI.HUD;
@@ -346,6 +350,28 @@ public class GameControllerTest {
 		gc.resize(100, 100);
 		verify(gc.camera, times(1)).setToOrtho(anyBoolean(), anyFloat(), anyFloat());
 		verify(gc.hud, times(1)).resize(anyInt(), anyInt());
+	}
+
+	@Test
+	public void testGenerateWeather() {
+		HashSet<Integer> directions = new HashSet<>();
+		for (int i = 0; i < 1000; i++) { // repeat enough times to overcome chance
+			gc.physicsObjects.clear();
+			assertDoesNotThrow(() -> gc.generateWeather());
+			assertEquals(gc.weatherPerGeneration, gc.physicsObjects.size());
+			directions.add(((Weather) gc.physicsObjects.get(0)).getDirectionTrend());
+		}
+
+		// should have four directions
+		assertEquals(4, directions.size());
+	}
+
+	@Test
+	public void testMockForHUD() {
+		assertDoesNotThrow(() -> {
+			GameController mocked = GameController.getMockForHUD();
+			assertNotNull(mocked);
+		});
 	}
 
 }

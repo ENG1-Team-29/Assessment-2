@@ -23,20 +23,6 @@ public abstract class ObstacleEntity extends PhysicsObject {
 
 	public abstract void Update(float delta);
 
-	public abstract void Destroy();
-
-	/**
-	 * Place the entity somewhere in global space
-	 *
-	 * @param x the x position
-	 * @param y the y position
-	 */
-	void SetPosition(float x, float y) {
-		position.x = x;
-		position.y = y;
-		sprite.setPosition(x, y);
-	}
-
 	public void Draw(SpriteBatch batch) {
 		sprite.draw(batch);
 	}

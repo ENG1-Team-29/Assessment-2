@@ -45,7 +45,7 @@ public class ResourceManager {
 			}
 		});
 
-		System.out.printf("Loaded fonts in %dms\n", time);
+		Gdx.app.log("ResourceManager", String.format("Loaded fonts in %dms\\n", time));
 
 		time = DebugUtils.timeCodeMs(() -> {
 			nullTex = genNullTex();
@@ -85,7 +85,7 @@ public class ResourceManager {
 			assets.finishLoading();
 		});
 
-		System.out.printf("Loaded textures in %dms\n", time);
+		Gdx.app.log("ResourceManager", String.format("Loaded textures in %dms\n", time));
 	}
 
 	public static void loadUITexture(String location) {

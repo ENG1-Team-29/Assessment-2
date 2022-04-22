@@ -85,6 +85,8 @@ public class GameController implements Screen {
 	/**
 	 * Creates a GameController with a default difficulty of
 	 * {@link Difficulty#MEDIUM}
+	 * 
+	 * @param game the game object
 	 */
 	public GameController(eng1game game) {
 		this(game, Difficulty.MEDIUM);
@@ -212,8 +214,7 @@ public class GameController implements Screen {
 
 	public void logic(float delta) {
 		timer -= delta;
-		if (timer <= 0)
-			gameOver();
+		if (timer <= 0) gameOver();
 
 		// give the player XP and Plunder each frame, normalized using delta
 		xpTick -= delta * xpTickMultiplier;
@@ -263,8 +264,7 @@ public class GameController implements Screen {
 			physicsObject.Draw(batch);
 		}
 
-		if (DebugUtils.DRAW_DEBUG_TEXT)
-			DebugUtils.drawEntityDebugText(this, batch);
+		if (DebugUtils.DRAW_DEBUG_TEXT) DebugUtils.drawEntityDebugText(this, batch);
 
 		// end the sprite batch
 		batch.end();
@@ -275,8 +275,7 @@ public class GameController implements Screen {
 		renderRays();
 		// this should be off during normal gameplay, but can be on to debug
 		// collisions
-		if (DebugUtils.DRAW_DEBUG_COLLISIONS)
-			DebugUtils.drawDebugCollisions(this, sr);
+		if (DebugUtils.DRAW_DEBUG_COLLISIONS) DebugUtils.drawDebugCollisions(this, sr);
 	}
 
 	/** Renders ProjectileRay objects */
@@ -301,8 +300,7 @@ public class GameController implements Screen {
 	/**
 	 * Updates all physics objects in the {@link #physicsObjects} list
 	 * 
-	 * @param delta
-	 *            time since last frame
+	 * @param delta time since last frame
 	 */
 	public void UpdateObjects(float delta) {
 		for (int i = 0; i < physicsObjects.size(); i++) {
@@ -312,8 +310,7 @@ public class GameController implements Screen {
 
 			for (int j = 0; j < physicsObjects.size(); j++) {
 				PhysicsObject other = physicsObjects.get(j);
-				if (i == j)
-					continue;
+				if (i == j) continue;
 
 				if (current.CheckCollisionWith(other)) {
 					current.OnCollision(other);
@@ -329,8 +326,8 @@ public class GameController implements Screen {
 	}
 
 	/**
-	 * Tests if player is in danger. The player is in danger if it is in range
-	 * of an {@link EnemyCollege} or an {@link EnemyBoat}.
+	 * Tests if player is in danger. The player is in danger if it is in range of an
+	 * {@link EnemyCollege} or an {@link EnemyBoat}.
 	 * 
 	 * @return {@code true} if within range of an enemy college or boat,
 	 *         {@code false} otherwise or player is invincible.
@@ -366,12 +363,11 @@ public class GameController implements Screen {
 	}
 
 	/**
-	 * Called when a college is destroyed Makes sure the boss college will be
-	 * made vulnerable after the rest of the colleges are destroyed, and spawns
-	 * a friendly college in the place of the enemy college.
+	 * Called when a college is destroyed Makes sure the boss college will be made
+	 * vulnerable after the rest of the colleges are destroyed, and spawns a
+	 * friendly college in the place of the enemy college.
 	 * 
-	 * @param oldCollege
-	 *            the college that was destroyed
+	 * @param oldCollege the college that was destroyed
 	 */
 	public void CollegeDestroyed(EnemyCollege oldCollege) {
 		addXp(100);
@@ -393,8 +389,8 @@ public class GameController implements Screen {
 
 	/**
 	 * Goes through all the {@link PhysicsObject} and removes ones from the list
-	 * that have had the flag set ({@link GameObject#removeOnNextTick()}) in a
-	 * safe manner
+	 * that have had the flag set ({@link GameObject#removeOnNextTick()}) in a safe
+	 * manner
 	 */
 	public void ClearKilledObjects() {
 		Iterator<PhysicsObject> p = physicsObjects.iterator();
@@ -452,8 +448,10 @@ public class GameController implements Screen {
 	}
 
 	/**
-	 * Calculates the overall game score to be presented to the player at the
-	 * end of the game.
+	 * Calculates the overall game score to be presented to the player at the end of
+	 * the game.
+	 * 
+	 * @return the game score
 	 */
 	public float getGameScore() {
 		float powerupScore = playerBoat.collectedPowerups.values().stream().reduce(0, Integer::sum);
@@ -468,8 +466,7 @@ public class GameController implements Screen {
 	 * Called to give a reference to a new {@link PhysicsObject} to the
 	 * {@link #physicsObjects} list
 	 * 
-	 * @param obj
-	 *            the object to add
+	 * @param obj the object to add
 	 */
 	public void NewPhysicsObject(PhysicsObject obj) {
 		// A new PhysicsObject has been created, add it to the list so it
@@ -481,8 +478,7 @@ public class GameController implements Screen {
 	/**
 	 * Add XP to the player's amount.
 	 * 
-	 * @param amount
-	 *            the amount of XP to add
+	 * @param amount the amount of XP to add
 	 */
 	public void addXp(float amount) {
 		xp += amount * getGameDifficulty().getPlayerXpMul();
@@ -492,8 +488,7 @@ public class GameController implements Screen {
 	/**
 	 * Add plunder to the player's amount.
 	 * 
-	 * @param amount
-	 *            the amount of plunder to add
+	 * @param amount the amount of plunder to add
 	 */
 	public void addPlunder(float amount) {
 		plunder += amount;
@@ -503,8 +498,7 @@ public class GameController implements Screen {
 	/**
 	 * Remove plunder from the player's amount.
 	 * 
-	 * @param amount
-	 *            the amount of plunder to remove
+	 * @param amount the amount of plunder to remove
 	 */
 	public void subtractPlunder(float amount) {
 		plunder -= amount;
@@ -521,8 +515,8 @@ public class GameController implements Screen {
 	}
 
 	/**
-	 * Get how much XP the player has in this current level. i.e. the amount of
-	 * XP excluding the XP contributing to whole levels
+	 * Get how much XP the player has in this current level. i.e. the amount of XP
+	 * excluding the XP contributing to whole levels
 	 * 
 	 * @return the xp in the current level
 	 * @see #getXpLevel()
@@ -535,8 +529,7 @@ public class GameController implements Screen {
 	/**
 	 * Subtract a number of levels from the xp
 	 * 
-	 * @param levels
-	 *            the number of levels to remove
+	 * @param levels the number of levels to remove
 	 */
 	public void subtractXpLevels(int levels) {
 		int curr = getXpLevel();
@@ -548,8 +541,7 @@ public class GameController implements Screen {
 	/**
 	 * The the XP required to go from {@code level-1} to {@code level}.
 	 * 
-	 * @param level
-	 *            the target level
+	 * @param level the target level
 	 * @return the XP difference between previous level and this one
 	 */
 	public static int getXpRequiredForLevel(int level) {
@@ -557,8 +549,8 @@ public class GameController implements Screen {
 	}
 
 	/**
-	 * The total XP the needs to level up. Note this is NOT the remaining
-	 * amount, but the total amount to be able to level up.
+	 * The total XP the needs to level up. Note this is NOT the remaining amount,
+	 * but the total amount to be able to level up.
 	 * 
 	 * @return the xp required to level up
 	 */
@@ -574,8 +566,7 @@ public class GameController implements Screen {
 	}
 
 	/**
-	 * @param xp
-	 *            the xp to set
+	 * @param xp the xp to set
 	 */
 	public void setXp(float xp) {
 		this.xp = xp;
@@ -589,8 +580,7 @@ public class GameController implements Screen {
 	}
 
 	/**
-	 * @param plunder
-	 *            the plunder to set
+	 * @param plunder the plunder to set
 	 */
 	public void setPlunder(int plunder) {
 		this.plunder = plunder;
@@ -611,8 +601,8 @@ public class GameController implements Screen {
 	}
 
 	/**
-	 * Returns a game controller instance with minimal data filled out to allow
-	 * the HUD to function without taking up a lot of data.
+	 * Returns a game controller instance with minimal data filled out to allow the
+	 * HUD to function without taking up a lot of data.
 	 * 
 	 * @return The new GameController instance
 	 */

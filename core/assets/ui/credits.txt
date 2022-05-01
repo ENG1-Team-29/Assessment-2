@@ -1,0 +1,70 @@
+-= Developers =-
+
+-= Assessment 2 =-
+-= Team 29 "Shard Software" =-
+James Burnell
+Hector Woods
+Ben Faulkner
+
+-= Assessment 1 =-
+-= Team 28 "Mario" =-
+Annabeth Singleton
+Joseph Frankland
+Leif Kemp
+Hugo Kwok
+Saj Hoque
+Lucy Li
+
+
+
+-= Audio =-
+
+Powerup SoundFX by 15.ai
+Based on characters from "TF2"
+
+Credits Music - "Yi Jian Mei"
+By Fei Yu-ching
+
+
+
+-= Graphics =-
+Original Assets By
+
+Annabeth Singleton
+Leif Kemp
+James Burnell
+
+
+-= Shard Software Logo =-
+
+James Burnell
+
+
+-= Software Used =-
+
+libGDX - Java Game Engine
+Blender - Shard Software Logo
+Eclipse & IntelliJ - Code Development
+Audacity - Audio Development
+
+
+-= Website =-
+www.mario.shardsoftware.tk
+
+Jensen Bradshaw
+James Burnell
+
+
+
+
+
+
+
+Produced For The University of York
+As Part of Engineering 1
+
+
+
+
+
+

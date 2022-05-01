@@ -7,13 +7,14 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
+import io.github.annabeths.GameScreens.CreditScreen;
 import io.github.annabeths.GameScreens.GameController;
+import io.github.annabeths.GameScreens.GameDifScreen;
 import io.github.annabeths.GameScreens.GameOverScreen;
 import io.github.annabeths.GameScreens.GameWinScreen;
 import io.github.annabeths.GameScreens.Menu;
 import io.github.annabeths.GameScreens.Screens;
 import io.github.annabeths.GameScreens.Splash;
-import io.github.annabeths.GameScreens.GameDifScreen;
 
 /** @tt.updated Assessment 2 */
 public class eng1game extends Game {
@@ -101,6 +102,9 @@ public class eng1game extends Game {
 		case gameDifScreen:
 			GameDifScreen gameDifScreen = new GameDifScreen(this);
 			setScreen(gameDifScreen);
+			break;
+		case credits:
+			setScreen(new CreditScreen(this));
 			break;
 		}
 	}

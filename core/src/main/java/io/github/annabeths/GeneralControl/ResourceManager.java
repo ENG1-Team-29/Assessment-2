@@ -82,6 +82,9 @@ public class ResourceManager {
 			for (PowerupType p : PowerupType.values()) {
 				loadTexture(p.getTexture());
 			}
+			/* Other Textures */
+			loadTexture("mario/shard-software-logo4.png");
+			loadTexture("mario/full.png");
 
 			assets.finishLoading();
 		});

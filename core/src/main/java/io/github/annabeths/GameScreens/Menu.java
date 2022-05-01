@@ -41,7 +41,10 @@ public class Menu implements Screen {
 		// layouts can be used to manage text to allow it to be centered
 		menuTextLayout = new GlyphLayout();
 		menuTextLayout.setText(font,
-				"press ENTER to PLAY\npress I to toggle INSTRUCTIONS\npress ESCAPE to QUIT");
+				"press ENTER to PLAY\n"
+				+ "press I to toggle INSTRUCTIONS\n"
+				+ "press C for credits\n"
+				+ "press ESCAPE to QUIT");
 		instructions = ResourceManager.getTexture("ui/instructions.png");
 		// create example HUD
 		hud = new HUD(GameController.getMockForHUD());
@@ -65,6 +68,8 @@ public class Menu implements Screen {
 			}
 		} else if (Gdx.input.isKeyJustPressed(Keys.ESCAPE)) {
 			Gdx.app.exit();
+		} else if (Gdx.input.isKeyJustPressed(Keys.C)) {
+			game.gotoScreen(Screens.credits);
 		}
 
 		// do draws
